@@ -5,26 +5,25 @@ import { useDominoStore } from '../store/useDominoStore';
 
 interface DominoPieceProps {
   domino: Domino;
-  isFirst: boolean; // İlk taş mı? (zinciri başlatan)
+  isFirst: boolean;
 }
 
-// Bir dominonun fiziksel boyutları (metre cinsinden)
-const DOMINO_WIDTH = 0.4;
-const DOMINO_HEIGHT = 1;
-const DOMINO_DEPTH = 0.15;
+// Domino boyutları (ince ve uzun = kolay devrilir)
+const DOMINO_WIDTH = 0.6;
+const DOMINO_HEIGHT = 1.2;
+const DOMINO_DEPTH = 0.2;
 
 export function DominoPiece({ domino, isFirst }: DominoPieceProps) {
   const rigidBodyRef = useRef<RapierRigidBody>(null);
   const isSimulating = useDominoStore((state) => state.isSimulating);
   const selectDomino = useDominoStore((state) => state.selectDomino);
 
-  // Simülasyon başladığında ilk taşa itme kuvveti uygula
   useEffect(() => {
     if (isSimulating && isFirst && rigidBodyRef.current) {
-      // Kısa bir gecikme: fizik motorunun hazır olması için
       const timeout = setTimeout(() => {
-        rigidBodyRef.current?.applyImpulse({ x: 0, y: 0, z: -2 }, true);
-      }, 100);
+        // Üst kısımdan it (daha gerçekçi devrilme)
+        rigidBodyRef.current?.applyImpulse({ x: 0, y: 0, z: -1.2 }, true);
+      }, 200);
       return () => clearTimeout(timeout);
     }
   }, [isSimulating, isFirst]);
@@ -32,13 +31,15 @@ export function DominoPiece({ domino, isFirst }: DominoPieceProps) {
   return (
     <RigidBody
       ref={rigidBodyRef}
-      // İnşaat modu = fixed (sabit), simülasyon = dynamic (hareketli)
       type={isSimulating ? 'dynamic' : 'fixed'}
       position={domino.position}
       rotation={domino.rotation}
-      colliders="cuboid" // Kutu şeklinde çarpışma kutusu
-      restitution={0.1}  // Sekme miktarı (az)
-      friction={0.6}     // Sürtünme
+      colliders="cuboid"
+      mass={1}
+      restitution={0}      // Sıfır sekme = zıplamaz
+      friction={0.8}       // Yüksek sürtünme = kaymaz
+      linearDamping={0.2}  // Hareket sönümü (yavaşça durur)
+      angularDamping={0.2} // Dönme sönümü
     >
       <mesh
         castShadow
@@ -49,7 +50,11 @@ export function DominoPiece({ domino, isFirst }: DominoPieceProps) {
         }}
       >
         <boxGeometry args={[DOMINO_WIDTH, DOMINO_HEIGHT, DOMINO_DEPTH]} />
-        <meshStandardMaterial color={isFirst ? '#ef4444' : domino.color} />
+        <meshStandardMaterial
+          color={isFirst ? '#ef4444' : domino.color}
+          metalness={0.1}
+          roughness={0.6}
+        />
       </mesh>
     </RigidBody>
   );

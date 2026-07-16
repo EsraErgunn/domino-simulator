@@ -4,28 +4,31 @@ import { useDominoStore } from '../store/useDominoStore';
 
 const FLOOR_SIZE = 30;
 
+// Koordinatı en yakın 0.5'e yuvarla (hafif hizalama)
+function snap(value: number): number {
+  return Math.round(value * 2) / 2;
+}
+
 export function BuildFloor() {
   const addDomino = useDominoStore((state) => state.addDomino);
   const isSimulating = useDominoStore((state) => state.isSimulating);
+  const ghostRotation = useDominoStore((state) => state.ghostRotation);
 
   const handlePointerDown = (e: ThreeEvent<PointerEvent>) => {
-    // Simülasyon çalışırken taş eklemeyi engelle
     if (isSimulating) return;
-
     e.stopPropagation();
 
-    // e.point = tıklanan 3D koordinat (raycaster hesaplıyor)
-    const x = e.point.x;
-    const z = e.point.z;
+    const x = snap(e.point.x);
+    const z = snap(e.point.z);
 
-    // Taşı zeminin üstüne yerleştir (y = yükseklik/2)
-    addDomino([x, 0.5, z], [0, 0, 0]);
+    // Hayalet taşın mevcut rotasyonuyla bırak
+    addDomino([x, 0.6, z], [0, ghostRotation, 0]);
   };
 
   return (
     <RigidBody type="fixed" colliders="cuboid">
       <mesh
-        rotation={[-Math.PI / 2, 0, 0]} // Yatay düzleme çevir
+        rotation={[-Math.PI / 2, 0, 0]}
         position={[0, 0, 0]}
         receiveShadow
         onPointerDown={handlePointerDown}

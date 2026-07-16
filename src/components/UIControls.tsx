@@ -25,7 +25,7 @@ export function UIControls() {
         minWidth: 200,
       }}
     >
-      <h2 style={{ margin: 0, fontSize: 18 }}>🎯 Domino Simulator</h2>
+      <h2 style={{ margin: 0, fontSize: 18 }}> Domino Simulator</h2>
 
       <p style={{ margin: 0, fontSize: 14, opacity: 0.8 }}>
         Toplam taş: {dominoes.length}
@@ -61,9 +61,17 @@ export function UIControls() {
         🗑 Hepsini Temizle
       </button>
 
-      <p style={{ margin: 0, fontSize: 12, opacity: 0.6, lineHeight: 1.5 }}>
-        Zemine tıklayarak taş ekle. Sonra "Başlat" ile zinciri tetikle!
-      </p>
+      <div style={{ fontSize: 12, opacity: 0.7, lineHeight: 1.7, marginTop: 4 }}>
+        <div style={{ fontWeight: 600, marginBottom: 4, opacity: 0.9 }}>
+          Kontroller:
+        </div>
+        <div>🖱️ Fare: zemine tıkla → taş bırak</div>
+        <div>⌨️ WASD / Oklar: hayaleti gezdir</div>
+        <div>🔄 Q / E: döndür</div>
+        <div>⬇️ Enter: taş bırak</div>
+        <div>↩️ Ctrl+Z: geri al</div>
+        <div style={{ marginTop: 6 }}>▶ Sonra "Başlat" ile zinciri tetikle!</div>
+      </div>
     </div>
   );
 }
