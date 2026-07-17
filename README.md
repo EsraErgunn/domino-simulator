@@ -3,7 +3,7 @@
 An interactive 3D domino builder and chain-reaction simulator built with React, TypeScript, and a real-time physics engine. Place dominoes on a wooden table, aim the first tile, and watch the chain reaction unfold with realistic physics.
 
 <!--
-  📹 DEMO GIF GOES HERE
+   DEMO GIF GOES HERE
   Replace the line below with your GIF once recorded (instructions in the repo).
   Example: ![Demo](./docs/demo.gif)
 -->

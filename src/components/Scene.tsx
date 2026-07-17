@@ -62,13 +62,19 @@ export function Scene() {
         dampingFactor={0.08}
         rotateSpeed={0.6}
         zoomSpeed={0.5}
-        panSpeed={0.6}
+        panSpeed={0.8}
+        enablePan={true}
         minDistance={3}
         maxDistance={60}
         maxPolarAngle={Math.PI / 2.1}
         autoRotate={autoRotate}
         autoRotateSpeed={1.0}
         target={[0, 0, 0]}
+        mouseButtons={{
+          LEFT: 2,   // Sol tık = PAN (kaydırma)
+          MIDDLE: 1, // Orta tık = ZOOM
+          RIGHT: 0,  // Sağ tık = ROTATE (döndürme)
+        }}
       />
     </Canvas>
   );
