@@ -8,7 +8,7 @@ export function createWoodTexture(): CanvasTexture {
   const ctx = canvas.getContext('2d')!;
 
   // Temel ahşap rengi (arka plan)
-  ctx.fillStyle = '#8b5a2b';
+  ctx.fillStyle = '#c8a06a';
   ctx.fillRect(0, 0, 512, 512);
 
   // Tahta damarları: dalgalı yatay çizgiler
@@ -18,8 +18,8 @@ export function createWoodTexture(): CanvasTexture {
     // Koyu ve açık tonlarla damar hissi
     ctx.strokeStyle =
       Math.random() > 0.5
-        ? `rgba(90, 55, 25, ${opacity})`   // koyu damar
-        : `rgba(180, 130, 80, ${opacity})`; // açık damar
+        ? `rgba(150, 110, 60, ${opacity})`   // orta ton damar
+        : `rgba(220, 190, 140, ${opacity})`; // açık damar
     ctx.lineWidth = 1 + Math.random() * 2;
 
     ctx.beginPath();
