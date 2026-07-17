@@ -1,6 +1,5 @@
 import { useDominoStore } from '../store/useDominoStore';
 
-// DominoPiece ile aynı boyutlar
 const DOMINO_WIDTH = 0.6;
 const DOMINO_HEIGHT = 1.2;
 const DOMINO_DEPTH = 0.2;
@@ -10,20 +9,12 @@ export function GhostDomino() {
   const ghostRotation = useDominoStore((state) => state.ghostRotation);
   const isSimulating = useDominoStore((state) => state.isSimulating);
 
-  // Simülasyon sırasında hayalet taşı gizle
   if (isSimulating) return null;
 
   return (
-    <mesh
-      position={ghostPosition}
-      rotation={[0, ghostRotation, 0]}
-    >
+    <mesh position={ghostPosition} rotation={[0, ghostRotation, 0]}>
       <boxGeometry args={[DOMINO_WIDTH, DOMINO_HEIGHT, DOMINO_DEPTH]} />
-      <meshStandardMaterial
-        color="#22c55e"
-        transparent
-        opacity={0.4}
-      />
+      <meshStandardMaterial color="#22c55e" transparent opacity={0.4} />
     </mesh>
   );
 }

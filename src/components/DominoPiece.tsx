@@ -1,7 +1,8 @@
 import { RigidBody, RapierRigidBody } from '@react-three/rapier';
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useMemo } from 'react';
 import type { Domino } from '../store/useDominoStore';
 import { useDominoStore } from '../store/useDominoStore';
+import { createDominoTexture } from '../utils/dominoTexture';
 
 interface DominoPieceProps {
   domino: Domino;
@@ -18,12 +19,16 @@ export function DominoPiece({ domino, isFirst }: DominoPieceProps) {
   const isSimulating = useDominoStore((state) => state.isSimulating);
   const selectDomino = useDominoStore((state) => state.selectDomino);
 
+  // Domino yüzü dokusunu üret (benekler)
+  const texture = useMemo(
+    () => createDominoTexture(domino.topPips, domino.bottomPips),
+    [domino.topPips, domino.bottomPips]
+  );
+
   useEffect(() => {
     if (isSimulating && isFirst && rigidBodyRef.current) {
       const timeout = setTimeout(() => {
-        // Store'dan itme yönünü oku
         const dir = useDominoStore.getState().pushDirection;
-        // Açıyı x-z düzleminde yön vektörüne çevir
         const fx = Math.sin(dir) * 1.2;
         const fz = Math.cos(dir) * 1.2;
         rigidBodyRef.current?.applyImpulse({ x: fx, y: 0, z: fz }, true);
@@ -31,6 +36,9 @@ export function DominoPiece({ domino, isFirst }: DominoPieceProps) {
       return () => clearTimeout(timeout);
     }
   }, [isSimulating, isFirst]);
+
+  // İlk taş için renk (mercan), diğerleri kendi pastel rengi
+  const sideColor = isFirst ? '#ff8b94' : domino.color;
 
   return (
     <RigidBody
@@ -54,11 +62,13 @@ export function DominoPiece({ domino, isFirst }: DominoPieceProps) {
         }}
       >
         <boxGeometry args={[DOMINO_WIDTH, DOMINO_HEIGHT, DOMINO_DEPTH]} />
-        <meshStandardMaterial
-          color={isFirst ? '#ff8b94' : domino.color}
-          metalness={0.05}
-          roughness={0.7}
-        />
+        {/* Küpün 6 yüzü: [sağ, sol, üst, alt, ön, arka] */}
+        <meshStandardMaterial attach="material-0" color={sideColor} roughness={0.6} />
+        <meshStandardMaterial attach="material-1" color={sideColor} roughness={0.6} />
+        <meshStandardMaterial attach="material-2" color={sideColor} roughness={0.6} />
+        <meshStandardMaterial attach="material-3" color={sideColor} roughness={0.6} />
+        <meshStandardMaterial attach="material-4" map={texture} roughness={0.5} />
+        <meshStandardMaterial attach="material-5" map={texture} roughness={0.5} />
       </mesh>
     </RigidBody>
   );

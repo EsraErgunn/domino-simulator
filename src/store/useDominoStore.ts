@@ -16,6 +16,8 @@ export interface Domino {
   position: [number, number, number];
   rotation: [number, number, number];
   color: string;
+  topPips: number;    // Üst yarıdaki nokta sayısı (0-6)
+  bottomPips: number; // Alt yarıdaki nokta sayısı (0-6)
 }
 
 interface DominoStore {
@@ -48,7 +50,7 @@ interface DominoStore {
   moveGhost: (dx: number, dz: number) => void;
   setGhostPosition: (position: [number, number, number]) => void;
   rotateGhost: (delta: number) => void;
-  
+
   rotatePushDirection: (delta: number) => void;
   togglePlacementMode: () => void;
   setCameraView: (view: 'perspective' | 'top' | 'side' | 'close') => void;
@@ -77,6 +79,8 @@ export const useDominoStore = create<DominoStore>((set) => ({
           position,
           rotation,
           color: PASTEL_COLORS[Math.floor(Math.random() * PASTEL_COLORS.length)],
+          topPips: Math.floor(Math.random() * 7),    // 0-6
+          bottomPips: Math.floor(Math.random() * 7), // 0-6
         },
       ],
     })),
@@ -115,15 +119,17 @@ export const useDominoStore = create<DominoStore>((set) => ({
     set((state) => ({
       ghostRotation: state.ghostRotation + delta,
     })),
-     rotatePushDirection: (delta) =>
+
+  rotatePushDirection: (delta) =>
     set((state) => ({
       pushDirection: state.pushDirection + delta,
     })),
-    togglePlacementMode: () =>
+
+  togglePlacementMode: () =>
     set((state) => ({ placementMode: !state.placementMode })),
 
-    setCameraView: (view) => set({ cameraView: view }),
-    toggleAutoRotate: () =>
+  setCameraView: (view) => set({ cameraView: view }),
+
+  toggleAutoRotate: () =>
     set((state) => ({ autoRotate: !state.autoRotate })),
 }));
-   

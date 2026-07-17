@@ -8,7 +8,6 @@ import { useDominoStore } from '../store/useDominoStore';
 import { DirectionArrow } from './DirectionArrow';
 import { CameraController } from './CameraController';
 
-
 export function Scene() {
   const dominoes = useDominoStore((state) => state.dominoes);
   const autoRotate = useDominoStore((state) => state.autoRotate);
@@ -31,20 +30,6 @@ export function Scene() {
         shadow-camera-right={20}
         shadow-camera-top={20}
         shadow-camera-bottom={-20}
-      />
-      <OrbitControls
-        makeDefault
-        enableDamping
-        dampingFactor={0.08}
-        rotateSpeed={0.6}
-        zoomSpeed={0.5}
-        panSpeed={0.6}
-        minDistance={3}
-        maxDistance={60}
-        maxPolarAngle={Math.PI / 2.1}
-        autoRotate={autoRotate}
-        autoRotateSpeed={1.0}
-        target={[0, 0, 0]}
       />
 
       {/* --- Fizik Dünyası --- */}
@@ -70,16 +55,19 @@ export function Scene() {
         fadeDistance={35}
       />
 
+      {/* --- Kamera Kontrolü (tek, autoRotate'li) --- */}
       <OrbitControls
         makeDefault
         enableDamping
         dampingFactor={0.08}
         rotateSpeed={0.6}
-        zoomSpeed={0.8}
+        zoomSpeed={0.5}
         panSpeed={0.6}
-        minDistance={5}
-        maxDistance={40}
+        minDistance={3}
+        maxDistance={60}
         maxPolarAngle={Math.PI / 2.1}
+        autoRotate={autoRotate}
+        autoRotateSpeed={1.0}
         target={[0, 0, 0]}
       />
     </Canvas>
