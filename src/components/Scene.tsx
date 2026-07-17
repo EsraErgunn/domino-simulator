@@ -37,7 +37,7 @@ export function Scene() {
         enableDamping
         dampingFactor={0.08}
         rotateSpeed={0.6}
-        zoomSpeed={1.2}
+        zoomSpeed={0.5}
         panSpeed={0.6}
         minDistance={3}
         maxDistance={60}
