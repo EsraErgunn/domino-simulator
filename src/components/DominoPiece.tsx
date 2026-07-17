@@ -21,8 +21,12 @@ export function DominoPiece({ domino, isFirst }: DominoPieceProps) {
   useEffect(() => {
     if (isSimulating && isFirst && rigidBodyRef.current) {
       const timeout = setTimeout(() => {
-        // Üst kısımdan it (daha gerçekçi devrilme)
-        rigidBodyRef.current?.applyImpulse({ x: 0, y: 0, z: -1.2 }, true);
+        // Store'dan itme yönünü oku
+        const dir = useDominoStore.getState().pushDirection;
+        // Açıyı x-z düzleminde yön vektörüne çevir
+        const fx = Math.sin(dir) * 1.2;
+        const fz = Math.cos(dir) * 1.2;
+        rigidBodyRef.current?.applyImpulse({ x: fx, y: 0, z: fz }, true);
       }, 200);
       return () => clearTimeout(timeout);
     }
@@ -36,10 +40,10 @@ export function DominoPiece({ domino, isFirst }: DominoPieceProps) {
       rotation={domino.rotation}
       colliders="cuboid"
       mass={1}
-      restitution={0}      // Sıfır sekme = zıplamaz
-      friction={0.8}       // Yüksek sürtünme = kaymaz
-      linearDamping={0.2}  // Hareket sönümü (yavaşça durur)
-      angularDamping={0.2} // Dönme sönümü
+      restitution={0}
+      friction={0.8}
+      linearDamping={0.2}
+      angularDamping={0.2}
     >
       <mesh
         castShadow
@@ -51,9 +55,9 @@ export function DominoPiece({ domino, isFirst }: DominoPieceProps) {
       >
         <boxGeometry args={[DOMINO_WIDTH, DOMINO_HEIGHT, DOMINO_DEPTH]} />
         <meshStandardMaterial
-          color={isFirst ? '#ef4444' : domino.color}
-          metalness={0.1}
-          roughness={0.6}
+          color={isFirst ? '#ff8b94' : domino.color}
+          metalness={0.05}
+          roughness={0.7}
         />
       </mesh>
     </RigidBody>

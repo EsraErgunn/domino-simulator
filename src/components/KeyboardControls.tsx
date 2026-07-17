@@ -47,9 +47,10 @@ export function KeyboardControls() {
         case 'enter':
         case ' ':
           e.preventDefault();
-          addDomino(state.ghostPosition, [0, state.ghostRotation, 0]);
+          if (state.placementMode) {
+            addDomino(state.ghostPosition, [0, state.ghostRotation, 0]);
+          }
           break;
-
         // --- Geri al: Ctrl+Z ---
         case 'z':
           if (e.ctrlKey) {
@@ -57,6 +58,8 @@ export function KeyboardControls() {
             undo();
           }
           break;
+
+          
       }
     };
 

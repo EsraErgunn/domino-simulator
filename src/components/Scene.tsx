@@ -5,18 +5,22 @@ import { DominoPiece } from './DominoPiece';
 import { BuildFloor } from './BuildFloor';
 import { GhostDomino } from './GhostDomino';
 import { useDominoStore } from '../store/useDominoStore';
+import { DirectionArrow } from './DirectionArrow';
+import { CameraController } from './CameraController';
+
 
 export function Scene() {
   const dominoes = useDominoStore((state) => state.dominoes);
+  const autoRotate = useDominoStore((state) => state.autoRotate);
 
   return (
     <Canvas
       shadows
       camera={{ position: [8, 10, 12], fov: 50 }}
-      style={{ width: '100vw', height: '100vh', background: '#0f172a' }}
+      style={{ width: '100vw', height: '100vh', background: '#2a2118' }}
     >
       {/* --- Işıklar --- */}
-      <ambientLight intensity={0.4} />
+      <ambientLight intensity={0.7} />
       <directionalLight
         position={[10, 20, 10]}
         intensity={1.2}
@@ -27,6 +31,20 @@ export function Scene() {
         shadow-camera-right={20}
         shadow-camera-top={20}
         shadow-camera-bottom={-20}
+      />
+      <OrbitControls
+        makeDefault
+        enableDamping
+        dampingFactor={0.08}
+        rotateSpeed={0.6}
+        zoomSpeed={1.2}
+        panSpeed={0.6}
+        minDistance={3}
+        maxDistance={60}
+        maxPolarAngle={Math.PI / 2.1}
+        autoRotate={autoRotate}
+        autoRotateSpeed={1.0}
+        target={[0, 0, 0]}
       />
 
       {/* --- Fizik Dünyası --- */}
@@ -40,15 +58,30 @@ export function Scene() {
       {/* --- Hayalet önizleme (fizik dışı) --- */}
       <GhostDomino />
 
+      <DirectionArrow />
+      <CameraController />
+
       {/* --- Grid --- */}
       <Grid
         args={[30, 30]}
-        cellColor="#334155"
-        sectionColor="#475569"
+        cellColor="#c8c8cc"
+        sectionColor="#a0a0a8"
         position={[0, 0.01, 0]}
+        fadeDistance={35}
       />
 
-      <OrbitControls makeDefault />
+      <OrbitControls
+        makeDefault
+        enableDamping
+        dampingFactor={0.08}
+        rotateSpeed={0.6}
+        zoomSpeed={0.8}
+        panSpeed={0.6}
+        minDistance={5}
+        maxDistance={40}
+        maxPolarAngle={Math.PI / 2.1}
+        target={[0, 0, 0]}
+      />
     </Canvas>
   );
 }

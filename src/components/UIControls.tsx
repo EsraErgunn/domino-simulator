@@ -6,6 +6,12 @@ export function UIControls() {
   const startSimulation = useDominoStore((state) => state.startSimulation);
   const stopSimulation = useDominoStore((state) => state.stopSimulation);
   const clearAll = useDominoStore((state) => state.clearAll);
+  const placementMode = useDominoStore((state) => state.placementMode);
+  const togglePlacementMode = useDominoStore((state) => state.togglePlacementMode);
+  const rotatePushDirection = useDominoStore((state) => state.rotatePushDirection);
+  const setCameraView = useDominoStore((state) => state.setCameraView);
+  const autoRotate = useDominoStore((state) => state.autoRotate);
+  const toggleAutoRotate = useDominoStore((state) => state.toggleAutoRotate);
 
   return (
     <div
@@ -52,6 +58,52 @@ export function UIControls() {
           ⏸ Durdur
         </button>
       )}
+      {/* Yerleştirme modu aç/kapa */}
+      <button
+        onClick={togglePlacementMode}
+        style={{
+          ...buttonStyle,
+          background: placementMode ? '#3b82f6' : '#64748b',
+        }}
+      >
+        {placementMode ? '✏️ Yerleştirme: AÇIK' : '🔒 Yerleştirme: KAPALI'}
+      </button>
+
+      {/* İlk taşın yıkılma yönü */}
+      <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+        <span style={{ fontSize: 13 }}>İlk taş yönü:</span>
+        <button
+          onClick={() => rotatePushDirection(-Math.PI / 8)}
+          style={{ ...buttonStyle, background: '#8b5cf6', padding: '6px 12px' }}
+        >
+          ↺
+        </button>
+        <button
+          onClick={() => rotatePushDirection(Math.PI / 8)}
+          style={{ ...buttonStyle, background: '#8b5cf6', padding: '6px 12px' }}
+        >
+          ↻
+        </button>
+      </div>
+      {/* Kamera görünümleri */}
+      <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+        <span style={{ fontSize: 13, width: '100%' }}>Görünüm:</span>
+        <button onClick={() => setCameraView('perspective')} style={viewBtn}>Açılı</button>
+        <button onClick={() => setCameraView('top')} style={viewBtn}>Üstten</button>
+        <button onClick={() => setCameraView('side')} style={viewBtn}>Yandan</button>
+        <button onClick={() => setCameraView('close')} style={viewBtn}>Yakın</button>
+      </div>
+      
+      {/* Otomatik dönme */}
+      <button
+        onClick={toggleAutoRotate}
+        style={{
+          ...buttonStyle,
+          background: autoRotate ? '#0ea5e9' : '#64748b',
+        }}
+      >
+        {autoRotate ? '🔄 Otomatik Dönme: AÇIK' : '⏹️ Otomatik Dönme: KAPALI'}
+      </button>
 
       {/* Temizle butonu */}
       <button
@@ -74,7 +126,9 @@ export function UIControls() {
       </div>
     </div>
   );
+  
 }
+
 
 // Ortak buton stili
 const buttonStyle: React.CSSProperties = {
@@ -84,5 +138,15 @@ const buttonStyle: React.CSSProperties = {
   fontSize: 14,
   fontWeight: 600,
   color: 'white',
+  cursor: 'pointer',
+};
+const viewBtn: React.CSSProperties = {
+  border: 'none',
+  borderRadius: 6,
+  padding: '6px 10px',
+  fontSize: 12,
+  fontWeight: 600,
+  color: 'white',
+  background: '#0ea5e9',
   cursor: 'pointer',
 };

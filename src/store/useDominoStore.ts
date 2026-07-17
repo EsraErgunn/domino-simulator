@@ -1,5 +1,16 @@
 import { create } from 'zustand';
 
+// Pastel renk paleti
+const PASTEL_COLORS = [
+  '#a8d8ea', // soft blue
+  '#aa96da', // soft purple
+  '#fcbad3', // soft pink
+  '#ffffd2', // soft yellow
+  '#a8e6cf', // soft mint
+  '#ffd3b6', // soft peach
+  '#d4a5a5', // soft rose
+];
+
 export interface Domino {
   id: string;
   position: [number, number, number];
@@ -17,6 +28,13 @@ interface DominoStore {
   ghostPosition: [number, number, number];
   ghostRotation: number; // Y ekseni etrafında dönüş (radyan)
 
+  // İlk taşın itileceği yön (radyan, Y ekseni)
+  pushDirection: number;
+
+  placementMode: boolean;
+  cameraView: 'perspective' | 'top' | 'side' | 'close';
+  autoRotate: boolean;
+
   // --- Actions ---
   addDomino: (position: [number, number, number], rotation?: [number, number, number]) => void;
   removeDomino: (id: string) => void;
@@ -30,6 +48,11 @@ interface DominoStore {
   moveGhost: (dx: number, dz: number) => void;
   setGhostPosition: (position: [number, number, number]) => void;
   rotateGhost: (delta: number) => void;
+  
+  rotatePushDirection: (delta: number) => void;
+  togglePlacementMode: () => void;
+  setCameraView: (view: 'perspective' | 'top' | 'side' | 'close') => void;
+  toggleAutoRotate: () => void;
 }
 
 export const useDominoStore = create<DominoStore>((set) => ({
@@ -39,6 +62,10 @@ export const useDominoStore = create<DominoStore>((set) => ({
   selectedDominoId: null,
   ghostPosition: [0, 0.6, 0],
   ghostRotation: 0,
+  pushDirection: 0,
+  placementMode: true,
+  cameraView: 'perspective',
+  autoRotate: false,
 
   // --- Actions ---
   addDomino: (position, rotation = [0, 0, 0]) =>
@@ -49,7 +76,7 @@ export const useDominoStore = create<DominoStore>((set) => ({
           id: Date.now().toString() + Math.random(),
           position,
           rotation,
-          color: '#3b82f6',
+          color: PASTEL_COLORS[Math.floor(Math.random() * PASTEL_COLORS.length)],
         },
       ],
     })),
@@ -88,4 +115,15 @@ export const useDominoStore = create<DominoStore>((set) => ({
     set((state) => ({
       ghostRotation: state.ghostRotation + delta,
     })),
+     rotatePushDirection: (delta) =>
+    set((state) => ({
+      pushDirection: state.pushDirection + delta,
+    })),
+    togglePlacementMode: () =>
+    set((state) => ({ placementMode: !state.placementMode })),
+
+    setCameraView: (view) => set({ cameraView: view }),
+    toggleAutoRotate: () =>
+    set((state) => ({ autoRotate: !state.autoRotate })),
 }));
+   
